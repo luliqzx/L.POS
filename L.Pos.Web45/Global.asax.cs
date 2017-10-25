@@ -1,5 +1,6 @@
 ﻿using L.Pos.DataAccess.Common;
 using L.Pos.DataAccess.Repo;
+using L.Pos.Model;
 using NHibernate;
 using SimpleInjector;
 using SimpleInjector.Integration.Web;
@@ -28,16 +29,24 @@ namespace L.Pos.Web45
 
         void Bootstrap()
         {
-            SessionProvider SessionProvider = new SessionProvider();
+            //SessionProvider SessionProvider = new SessionProvider();
             // Create the container as usual.
             var container = new Container();
             container.Options.DefaultScopedLifestyle = new WebRequestLifestyle();
 
+
             // Register your types, for instance:
             //container.Register(() => SessionProvider.SessionFactory, Lifestyle.Singleton);
-            container.Register<ISessionFactory>(() => SessionProvider.SessionFactory, Lifestyle.Singleton);
-            container.Register(typeof(IBaseRepo<>), new[] { typeof(BaseRepo<>).Assembly });
-            //container.Register<IUserRepo, UserRepo>(Lifestyle.Scoped);
+            //container.Register<ISessionFactory>(() => SessionProvider.SessionFactory, Lifestyle.Singleton);
+            //container.Register<ISessionFactory>(() => SessionProvider.SessionFactory2, Lifestyle.Singleton);
+
+            container.Register<ISessionProvider, SessionProvider>(Lifestyle.Singleton);
+
+            //var assemblies = new[] { SessionProvider.CreateSessionFactory("mssqlserverConn"), SessionProvider.CreateSessionFactory("mssqlserverConn2") };
+            //container.RegisterCollection<ISessionFactory>(assemblies);
+            //container.Register(typeof(IBaseRepo<>), new[] { typeof(BaseRepo<>).Assembly });
+            container.Register<IUserRepo, UserRepo>(Lifestyle.Scoped);
+            container.Register<ICurrencyRepo, CurrencyRepo>(Lifestyle.Scoped);
 
             // This is an extension method from the integration package.
             container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
@@ -46,8 +55,12 @@ namespace L.Pos.Web45
 
             DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
 
-            UserRepo repo = new UserRepo();
-            repo.GetOne();
+            //IUserRepo repo = new UserRepo();
+            //repo.GetOne();
+            ////IList<User> lstUser = repo.GetAll();
+
+            //ICurrencyRepo CurrencyRepo = new CurrencyRepo();
+            //IList<Currency> lstCurrency = CurrencyRepo.GetAll();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using L.Pos.Model;
+﻿using L.Pos.DataAccess.Common;
+using L.Pos.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,12 @@ namespace L.Pos.DataAccess.Repo
 
     public class UserRepo : BaseRepo<User>, IUserRepo
     {
+        public UserRepo(ISessionProvider _SessionProvider) : base(_SessionProvider)
+        {
+            SessionProvider = _SessionProvider;
+            SessionFactory = SessionProvider.GetSessionFactory();
+            Session = SessionFactory.OpenSession();
+        }
         public void GetOne()
         {
             User usr = GetBy(p => p.ID == "8584");

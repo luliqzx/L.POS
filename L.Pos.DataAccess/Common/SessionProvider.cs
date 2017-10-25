@@ -1,5 +1,6 @@
 ﻿using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
+using L.Pos.DataAccess.Map;
 using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Tool.hbm2ddl;
@@ -11,34 +12,98 @@ using System.Text;
 
 namespace L.Pos.DataAccess.Common
 {
-    public class SessionProvider
+    public class CollectionSessionFactory
+    {
+        public virtual string CSN { get; set; }
+        public virtual ISessionFactory SessionFactory { get; set; }
+    }
+
+    public interface ISessionProvider
+    {
+        IList<CollectionSessionFactory> CollectionSessionFactories { get; set; }
+        //ISessionFactory SessionFactory { get; }
+        //ISessionFactory SessionFactory2 { get; }
+        ISessionFactory GetSessionFactory(string CSN = "");
+    }
+
+    public class SessionProvider : ISessionProvider
     {
         //private readonly string _connectionString = "";
-        private  static ISessionFactory _sessionFactory;
+        //private ISessionFactory _sessionFactory;
+        //private ISessionFactory _sessionFactory2;
 
-        public ISessionFactory SessionFactory
+        //public ISessionFactory SessionFactory
+        //{
+        //    get { return _sessionFactory ?? (_sessionFactory = CreateSessionFactory("mssqlserverConn")); }
+        //}
+
+        //public ISessionFactory SessionFactory2
+        //{
+        //    get { return _sessionFactory2 ?? (_sessionFactory2 = CreateSessionFactory("mssqlserverConn2")); }
+        //}
+
+        public IList<CollectionSessionFactory> CollectionSessionFactories
         {
-            get { return _sessionFactory ?? (_sessionFactory = CreateSessionFactory()); }
+            get; set;
+        }
+
+        public ISessionFactory GetSessionFactory(string CSN = "")
+        {
+            if (string.IsNullOrWhiteSpace(CSN))
+            {
+                return CollectionSessionFactories.FirstOrDefault().SessionFactory;
+            }
+            return CollectionSessionFactories.FirstOrDefault(x => x.CSN == CSN).SessionFactory;
         }
 
         public SessionProvider()
         {
+            if (CollectionSessionFactories == null)
+            {
+                CollectionSessionFactories = new List<CollectionSessionFactory>();
+            }
+
+            string CSN1 = "mssqlserverConn";
+            string CSN2 = "mssqlserverConn2";
+
+            CollectionSessionFactory csf1 = CollectionSessionFactories.FirstOrDefault(x => x.CSN == CSN1);
+            if (csf1 == null)
+            {
+                csf1 = new CollectionSessionFactory { CSN = CSN1, SessionFactory = CreateSessionFactory(CSN1) };
+                CollectionSessionFactories.Add(csf1);
+            }
+
+            csf1 = CollectionSessionFactories.FirstOrDefault(x => x.CSN == CSN2);
+            if (csf1 == null)
+            {
+                csf1 = new CollectionSessionFactory { CSN = CSN2, SessionFactory = CreateSessionFactory(CSN2) };
+                CollectionSessionFactories.Add(csf1);
+            }
         }
 
-        private ISessionFactory CreateSessionFactory()
+        public ISessionFactory CreateSessionFactory(string name)
         {
-            return Fluently.Configure()
-                         .Database(CreateMSSqlDbConfig())
-                         .Mappings(m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly()))
-                         .ExposeConfiguration(UpdateSchema)
-                         .ExposeConfiguration(cfg => cfg.Properties.Add("use_proxy_validator", "false"))
-                         .ExposeConfiguration(config =>
-                         {
-                             config.SetInterceptor(new SqlStatementInterceptor());
-                             config.SetProperty(NHibernate.Cfg.Environment.SqlExceptionConverter,
-                                 typeof(SqlExceptionConverter).AssemblyQualifiedName);
-                         })
-                         .BuildSessionFactory();
+            FluentConfiguration fc = Fluently.Configure();
+            if ("mssqlserverConn" == name)
+            {
+                fc.Database(CreateMSSqlDbConfig())
+                       .Mappings(m => m.FluentMappings.AddFromAssemblyOf<UserMap>());
+            }
+            else if ("mssqlserverConn2" == name)
+            {
+                fc.Database(CreateMSSqlDbConfig2())
+                       .Mappings(m => m.FluentMappings.AddFromAssemblyOf<CurrencyMap>());
+            }
+
+            fc.ExposeConfiguration(UpdateSchema)
+            .ExposeConfiguration(cfg => cfg.Properties.Add("use_proxy_validator", "false"))
+            .ExposeConfiguration(config =>
+            {
+                config.SetInterceptor(new SqlStatementInterceptor());
+                config.SetProperty(NHibernate.Cfg.Environment.SqlExceptionConverter,
+                    typeof(SqlExceptionConverter).AssemblyQualifiedName);
+            });
+            return fc.BuildSessionFactory();
         }
 
         // Returns our database configuration
@@ -54,10 +119,24 @@ namespace L.Pos.DataAccess.Common
             return MsSqlConfiguration;
         }
 
+        // Returns our database configuration
+        private static MsSqlConfiguration CreateMSSqlDbConfig2()
+        {
+            MsSqlConfiguration MsSqlConfiguration = MsSqlConfiguration.MsSql2008.ConnectionString(c => c.FromConnectionStringWithKey("mssqlserverConn2"))
+            #region Debug
+#if debug
+                .ShowSql()
+#endif
+;
+            #endregion
+            return MsSqlConfiguration;
+        }
+
         private static void UpdateSchema(Configuration cfg)
         {
             new SchemaUpdate(cfg)
                 .Execute(false, true);
         }
+
     }
 }

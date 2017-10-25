@@ -116,6 +116,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\BaseAuthController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -136,15 +137,16 @@
     <Folder Include="Models\" />
     <Folder Include="Views\BaseAuth\" />
     <Folder Include="Views\Base\" />
+    <Folder Include="Views\Test\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\L.Pos.Cons\L.Pos.Cons.csproj">
-      <Project>{74c322ee-6544-458c-acb1-20bfbc9f2a86}</Project>
-      <Name>L.Pos.Cons</Name>
-    </ProjectReference>
     <ProjectReference Include="..\L.Pos.DataAccess\L.Pos.DataAccess.csproj">
       <Project>{5e9463b5-63b0-444d-975e-2f98f45099fc}</Project>
       <Name>L.Pos.DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\L.Pos.Model\L.Pos.Model.csproj">
+      <Project>{be6f0996-e58c-4a48-a9e5-ccf0451cf119}</Project>
+      <Name>L.Pos.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

@@ -19,21 +19,26 @@ namespace L.Pos.DataAccess.Repo
     {
         protected virtual ISessionFactory SessionFactory { get; set; }
         protected virtual ISession Session { get; set; }
+        protected virtual ISessionProvider SessionProvider { get; set; }
 
-        public BaseRepo()
+        public BaseRepo(ISessionProvider _SessionProvider)
         {
-            SessionProvider SessionProvider = new SessionProvider();
-            SessionFactory = SessionProvider.SessionFactory;
+            SessionProvider = _SessionProvider;
+            SessionFactory = SessionProvider.GetSessionFactory();
             Session = SessionFactory.OpenSession();
         }
 
-        public IList<T> GetAll()
+        public BaseRepo()
         {
-            IList<T> lstT = Session.QueryOver<IList<T>>().List<T>();
+        }
+
+        public virtual IList<T> GetAll()
+        {
+            IList<T> lstT = Session.QueryOver<T>().List<T>();
             return lstT;
         }
 
-        public T GetBy(Expression<Func<T, bool>> expfunc)
+        public virtual T GetBy(Expression<Func<T, bool>> expfunc)
         {
             T T = Session.Query<T>().FirstOrDefault(expfunc);
             return T;
