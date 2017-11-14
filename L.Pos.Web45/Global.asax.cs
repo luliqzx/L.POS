@@ -1,7 +1,6 @@
 ﻿using L.Pos.DataAccess.Common;
 using L.Pos.DataAccess.Repo;
 using L.Pos.Model;
-using NHibernate;
 using SimpleInjector;
 using SimpleInjector.Integration.Web;
 using SimpleInjector.Integration.Web.Mvc;
@@ -29,11 +28,9 @@ namespace L.Pos.Web45
 
         void Bootstrap()
         {
-            //SessionProvider SessionProvider = new SessionProvider();
             // Create the container as usual.
             var container = new Container();
             container.Options.DefaultScopedLifestyle = new WebRequestLifestyle();
-
 
             // Register your types, for instance:
             //container.Register(() => SessionProvider.SessionFactory, Lifestyle.Singleton);
