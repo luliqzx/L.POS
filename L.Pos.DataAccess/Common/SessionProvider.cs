@@ -44,7 +44,8 @@ namespace L.Pos.DataAccess.Common
 
         public IList<CollectionSessionFactory> CollectionSessionFactories
         {
-            get; set;
+            get;
+            set;
         }
 
         public ISessionFactory GetSessionFactory(string CSN = "")
@@ -87,7 +88,13 @@ namespace L.Pos.DataAccess.Common
             if ("mssqlserverConn" == name)
             {
                 fc.Database(CreateMSSqlDbConfig())
-                       .Mappings(m => m.FluentMappings.AddFromAssemblyOf<UserMap>());
+                       .Mappings(m => m.FluentMappings
+                           .AddFromAssemblyOf<UserMap>()
+                           .AddFromAssemblyOf<CustomerMap>()
+                           .AddFromAssemblyOf<CustomerAddressMap>()
+                           .AddFromAssemblyOf<CountryMap>()
+                           .AddFromAssemblyOf<AddressMap>()
+                           );
             }
             else if ("mssqlserverConn2" == name)
             {

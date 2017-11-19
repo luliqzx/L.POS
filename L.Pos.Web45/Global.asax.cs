@@ -21,9 +21,7 @@ namespace L.Pos.Web45
         {
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-
             Bootstrap();
-
         }
 
         void Bootstrap()
