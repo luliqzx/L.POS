@@ -7,5 +7,6 @@ namespace L.Pos.DataAccess
 {
     public class Class1
     {
+
     }
 }
