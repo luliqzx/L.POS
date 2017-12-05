@@ -26,6 +26,7 @@ namespace L.Pos.Cons
             IList<User> a = userRepo.GetAll();
             ICurrencyRepo CurrencyRepo = container.GetInstance<ICurrencyRepo>();
             IList<Currency> b = CurrencyRepo.GetAll();
+
         }
 
         static void Bootstrap()
