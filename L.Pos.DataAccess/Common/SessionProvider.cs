@@ -65,7 +65,7 @@ namespace L.Pos.DataAccess.Common
             }
 
             string CSN1 = "mssqlserverConn";
-            string CSN2 = "mssqlserverConn2";
+            //string CSN2 = "mssqlserverConn2";
 
             CollectionSessionFactory csf1 = CollectionSessionFactories.FirstOrDefault(x => x.CSN == CSN1);
             if (csf1 == null)
@@ -74,12 +74,12 @@ namespace L.Pos.DataAccess.Common
                 CollectionSessionFactories.Add(csf1);
             }
 
-            csf1 = CollectionSessionFactories.FirstOrDefault(x => x.CSN == CSN2);
-            if (csf1 == null)
-            {
-                csf1 = new CollectionSessionFactory { CSN = CSN2, SessionFactory = CreateSessionFactory(CSN2) };
-                CollectionSessionFactories.Add(csf1);
-            }
+            //csf1 = CollectionSessionFactories.FirstOrDefault(x => x.CSN == CSN2);
+            //if (csf1 == null)
+            //{
+            //    csf1 = new CollectionSessionFactory { CSN = CSN2, SessionFactory = CreateSessionFactory(CSN2) };
+            //    CollectionSessionFactories.Add(csf1);
+            //}
         }
 
         public ISessionFactory CreateSessionFactory(string name)
