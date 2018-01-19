@@ -7,7 +7,7 @@ namespace L.Pos.Model.Entity
 {
     public class UserType : BaseTEntity<string>
     {
-        public virtual string UserTypeName { get; set; }
+        public virtual string Description { get; set; }
          
     }
 }

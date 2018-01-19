@@ -9,6 +9,6 @@ namespace L.Pos.Model.Entity
     {
         public virtual string ProductName { get; set; }
         public virtual ProductType ProductType { get; set; }
-        public virtual Supplier Supplier { get; set; }
+        public virtual Vendor Vendor { get; set; }
     }
 }

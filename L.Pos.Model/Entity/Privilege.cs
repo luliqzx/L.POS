@@ -5,8 +5,8 @@ using System.Text;
 
 namespace L.Pos.Model.Entity
 {
-    public class Supplier : BaseTEntity<string>
+    public class Privilege : BaseTEntity<string>
     {
-        public virtual string SupplierName { get; set; }
+        public virtual string PrivilegeName { get; set; }
     }
 }

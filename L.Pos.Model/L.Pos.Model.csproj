@@ -48,9 +48,13 @@
     <Compile Include="Entity\Customer.cs" />
     <Compile Include="Entity\CustomerAddress.cs" />
     <Compile Include="Entity\CustomerType.cs" />
+    <Compile Include="Entity\Menu.cs" />
+    <Compile Include="Entity\Privilege.cs" />
     <Compile Include="Entity\Product.cs" />
     <Compile Include="Entity\ProductType.cs" />
-    <Compile Include="Entity\Supplier.cs" />
+    <Compile Include="Entity\Role.cs" />
+    <Compile Include="Entity\RoleMenu.cs" />
+    <Compile Include="Entity\Vendor.cs" />
     <Compile Include="Entity\TEntity.cs" />
     <Compile Include="Entity\User.cs" />
     <Compile Include="Entity\UserType.cs" />

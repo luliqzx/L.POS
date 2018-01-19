@@ -13,5 +13,6 @@ namespace L.Pos.Model.Entity
         public virtual string Title { get; set; }
         public virtual string Gender { get; set; }
         public virtual DateTime BirthOfDate { get; set; }
+        public virtual ICollection<Role> UserRole { get; set; }
     }
 }
